@@ -33,6 +33,14 @@ pyminitouch
 后放入weights文件夹下  
 二、先运行 “启动和结束进程.py” 启动scrcpy
 把“训练数据截取_A.py” 中的两项改成你的  
+获取设备id的方法：
+```shell script
+1、打开手机的“设置”。
+2、进入“华为账号”中心。
+3、点击选择“设备”。
+4、选择“当前设备”即可进入查看该设备ID。
+ResnetGPT> .\adb.exe shell settings get secure android_id
+```
 ![启动和结束进程.py](image/说明.png)  
 三、启动王者荣耀进入5v5人机对战    运行 “训练数据截取_A.py” 即可。
 ## 生成训练数据

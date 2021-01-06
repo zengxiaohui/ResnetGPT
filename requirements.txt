@@ -1,0 +1,3 @@
+pynput==1.7.2
+pyminitouch==0.3.3
+torchtext==0.6.0

@@ -77,7 +77,7 @@ def get_model(opt,  trg_vocab,model_weights='model_weights'):
        
     if opt.load_weights is not None and os.path.isfile(opt.load_weights+'/'+model_weights):
         print("loading pretrained weights...")
-        model.load_state_dict(torch.load(f'{opt.load_weights}/'+model_weights))
+        model.load_state_dict(torch.load(f'{opt.load_weights}/'+model_weights,map_location=torch.device('cpu')))
     else:
         量 = 0
         for p in model.parameters():

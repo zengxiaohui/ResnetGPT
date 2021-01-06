@@ -14,8 +14,8 @@ from pynput.keyboard import Controller, Key, Listener
 from pynput import keyboard
 import time, threading
 
-_DEVICE_ID = '68UDU17B14011947'
-窗口名称="RNE-AL00"
+_DEVICE_ID = 'FJH5T18A31026410'
+窗口名称="PAR-AL00"
 模型名称= 'model_weights_O35'
 训练数据保存目录='../训练数据样本'
 if not os.path.exists(训练数据保存目录):
@@ -185,13 +185,13 @@ with open(操作查询路径, encoding='utf8') as f:
 
 设备 = MyMNTDevice(_DEVICE_ID)
 device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
-mod = torchvision.models.resnet101(pretrained=True).eval().cuda(device).requires_grad_(False)
+mod = torchvision.models.resnet101(pretrained=True).eval().to(device).requires_grad_(False)
 resnet101 = myResnet(mod)
 config = TransformerConfig()
 
 model = get_model(config, 130, 模型名称)
 
-model = model.cuda(device).requires_grad_(False)
+model = model.to(device).requires_grad_(False)
 
 while True:
     if AI打开 :
@@ -210,7 +210,7 @@ while True:
         图片张量 = torch.Tensor(0)
         操作张量 = torch.Tensor(0)
 
-        伪词序列 = torch.from_numpy(np.ones((1, 60)).astype(np.int64)).cuda(device).unsqueeze(0)
+        伪词序列 = torch.from_numpy(np.ones((1, 60)).astype(np.int64)).to(device).unsqueeze(0)
 
         指令延时=0
 
@@ -236,7 +236,7 @@ while True:
 
                 img = np.array(imgA)
 
-                img = torch.from_numpy(img).cuda(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
+                img = torch.from_numpy(img).to(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
                 _,out = resnet101(img)
                 图片张量 = out.reshape(1,6*6*2048)
 
@@ -244,7 +244,7 @@ while True:
 
                 img = np.array(imgA)
 
-                img = torch.from_numpy(img).cuda(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
+                img = torch.from_numpy(img).to(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
                 _,out = resnet101(img)
                 图片张量 = torch.cat((图片张量, out.reshape(1,6*6*2048)), 0)
                 操作序列 = np.append(操作序列, 抽样np[0, 0])
@@ -254,7 +254,7 @@ while True:
 
                 img = np.array(imgA)
 
-                img = torch.from_numpy(img).cuda(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
+                img = torch.from_numpy(img).to(device).unsqueeze(0).permute(0, 3, 2, 1) / 255
                 _,out = resnet101(img)
                 图片张量 = 图片张量[0:18, :]
                 操作序列=操作序列[0:18]
@@ -262,7 +262,7 @@ while True:
                 图片张量 = torch.cat((图片张量, out.reshape(1,6*6*2048)), 0)
 
 
-            操作张量 = torch.from_numpy(操作序列.astype(np.int64)).cuda(device)
+            操作张量 = torch.from_numpy(操作序列.astype(np.int64)).to(device)
             src_mask, trg_mask = create_masks(操作张量.unsqueeze(0), 操作张量.unsqueeze(0), device)
             输出_实际_A = model(图片张量.unsqueeze(0), 操作张量.unsqueeze(0),trg_mask)
 
